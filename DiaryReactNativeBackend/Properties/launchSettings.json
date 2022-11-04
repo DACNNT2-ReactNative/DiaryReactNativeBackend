@@ -3,10 +3,11 @@
     "DiaryReactNativeBackend": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "https://localhost:3001/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:55630;http://localhost:55631"
+      "applicationUrl": "https://localhost:3001"
     }
   }
 }
