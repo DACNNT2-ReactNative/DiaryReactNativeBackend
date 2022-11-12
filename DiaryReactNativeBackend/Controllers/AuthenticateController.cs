@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Reflection.PortableExecutable;
 using System.Security.Claims;
 using System.Text;
@@ -44,7 +45,7 @@ public class AuthenticateController : Controller
 
         if (existingUser == null)
         {
-            throw new Exception("User doesn't exist!");
+            return Unauthorized("Wrong username or password");
         }
 
         var authClaims = new List<Claim>
@@ -80,7 +81,7 @@ public class AuthenticateController : Controller
 
         if (existingUser != null)
         {
-            throw new Exception("User has already existed!");
+            return BadRequest("User has already existed!");
         }
 
         var registered = await _userLogic.SaveUser(requestModel);
