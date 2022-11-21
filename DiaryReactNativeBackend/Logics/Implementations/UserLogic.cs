@@ -22,7 +22,7 @@ public class UserLogic : IUserLogic
     {
         var user = _mapper.Map<RegisterRequestModel, UserModel>(requestModel);
 
-        user.UserId = Guid.NewGuid().ToString();        
+        user.UserId = Guid.NewGuid().ToString();   
         user.Password = EncodingHelper.EncodePasswordToBase64(requestModel.Password);
         user.IsProtected = false;
         user.CreateAt = DateTime.Now;

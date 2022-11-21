@@ -10,7 +10,9 @@ public static class RepositoriesConfigurations
     public static void ConfigureRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITopicRepository, TopicRepository>();
 
-        services.AddScoped<IUserLogic, UserLogic>();        
+        services.AddScoped<IUserLogic, UserLogic>(); 
+        services.AddScoped<ITopicLogic, TopicLogic>();
     }
 }
