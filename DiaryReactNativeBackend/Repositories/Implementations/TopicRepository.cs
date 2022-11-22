@@ -6,7 +6,7 @@ namespace DiaryReactNativeBackend.Repositories.Implementations;
 
 public class TopicRepository : HashKeyOnlyRepositoryBase<TopicModel, string>, ITopicRepository
 {
-    protected TopicRepository(IDynamoDBContext dbContext) : base(dbContext)
+    public TopicRepository(IDynamoDBContext dbContext) : base(dbContext)
     {
     }
 
@@ -15,5 +15,15 @@ public class TopicRepository : HashKeyOnlyRepositoryBase<TopicModel, string>, IT
         await SaveAsync(topic);
 
         return topic.TopicId;
+    }
+
+    public async Task<List<TopicModel>> GetAllTopics()
+    {
+        return await GetList();
+    }
+
+    public async Task<TopicModel> GetTopicById(string topicId)
+    {
+        return await GetByHashKey(topicId);
     }
 }

@@ -4,7 +4,7 @@
 
 namespace DiaryReactNativeBackend.Repositories.Models;
 
-[DynamoDBTable("topic")]
+[DynamoDBTable("topics")]
 public class TopicModel
 {
     [DynamoDBHashKey("topicId")]
@@ -14,7 +14,7 @@ public class TopicModel
     public string UserId { get; set; }
 
     [DynamoDBProperty("Name")]
-    public string name { get; set; }
+    public string Name { get; set; }
 
     [DynamoDBProperty("createAt")]
     public DateTime CreateAt { get; set; }

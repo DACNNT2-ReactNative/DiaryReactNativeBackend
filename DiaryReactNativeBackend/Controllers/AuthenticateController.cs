@@ -92,10 +92,17 @@ public class AuthenticateController : Controller
     [Route("upload-image")]
     public async Task<IActionResult> UploadImage([FromForm] UploadImageModel image)
     {
-        var objUpload = new S3ObjectUpload(image.Image, "osd-hr-management", "public/image");
-        var path = await _storeService.UploadFileAsync(objUpload);
+        try
+        {
+            var objUpload = new S3ObjectUpload(image.Image, "osd-hr-management", "public/image");
+            var path = await _storeService.UploadFileAsync(objUpload);
 
-        return Ok(path);
+            return Ok(path);
+        }
+        catch
+        {
+            return BadRequest("Can not update image");
+        }
     }
 
     [HttpGet]
