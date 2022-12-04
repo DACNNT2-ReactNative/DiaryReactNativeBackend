@@ -16,16 +16,17 @@ public class StorageService : IStorageService
 
     public async Task<string> UploadFileAsync(S3ObjectUpload obj)
     {
-        var path = string.IsNullOrEmpty(obj.Prefix) ? obj.File.FileName : $"{obj.Prefix?.TrimEnd('/')}/{obj.File.FileName}";
+        byte[] bytes = Convert.FromBase64String(obj.Base64String);
+
+        var path = string.IsNullOrEmpty(obj.Prefix) ? obj.ImageName : $"{obj.Prefix?.TrimEnd('/')}/{obj.ImageName}";
         var bucketExists = await _s3Client.DoesS3BucketExistAsync(obj.BucketName);
         if (!bucketExists) return $"Bucket {obj.BucketName} does not exist.";
         var request = new PutObjectRequest()
         {
             BucketName = obj.BucketName,
             Key = path,
-            InputStream = obj.File.OpenReadStream()
+            InputStream = new MemoryStream(bytes)
         };
-        request.Metadata.Add("Content-Type", obj.File.ContentType);
         try
         {
             await _s3Client.PutObjectAsync(request);

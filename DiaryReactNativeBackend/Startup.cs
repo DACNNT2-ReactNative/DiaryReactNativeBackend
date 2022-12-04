@@ -34,8 +34,8 @@ public class Startup
 
         services.Configure<FormOptions>(options =>
         {
-            // Set the limit file to 5 MB
-            options.MultipartBodyLengthLimit = 5000000;
+            // Set the limit file to 1 MB
+            options.MultipartBodyLengthLimit = 1000000;
         });
 
         services.AddAuthentication(options =>

@@ -90,11 +90,11 @@ public class AuthenticateController : Controller
 
     [HttpPost]
     [Route("upload-image")]
-    public async Task<IActionResult> UploadImage([FromForm] UploadImageModel image)
+    public async Task<IActionResult> UploadImage([FromBody] UploadImageModel requestModel)
     {
         try
         {
-            var objUpload = new S3ObjectUpload(image.Image, "osd-hr-management", "public/image");
+            var objUpload = new S3ObjectUpload(requestModel.ImageName, requestModel.Base64String, "osd-hr-management", "public/image");
             var path = await _storeService.UploadFileAsync(objUpload);
 
             return Ok(path);
