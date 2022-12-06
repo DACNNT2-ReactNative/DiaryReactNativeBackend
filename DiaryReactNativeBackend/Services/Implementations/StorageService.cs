@@ -20,7 +20,7 @@ public class StorageService : IStorageService
 
         var path = string.IsNullOrEmpty(obj.Prefix) ? obj.ImageName : $"{obj.Prefix?.TrimEnd('/')}/{obj.ImageName}";
         var bucketExists = await _s3Client.DoesS3BucketExistAsync(obj.BucketName);
-        if (!bucketExists) return $"Bucket {obj.BucketName} does not exist.";
+        if (!bucketExists) throw new Exception("error");
         var request = new PutObjectRequest()
         {
             BucketName = obj.BucketName,

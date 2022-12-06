@@ -45,7 +45,7 @@ public class AuthenticateController : Controller
 
         if (existingUser == null)
         {
-            return Unauthorized("Wrong username or password");
+            return Unauthorized("Sai tên đăng nhập hoặc mật khẩu ");
         }
 
         var authClaims = new List<Claim>
@@ -81,7 +81,7 @@ public class AuthenticateController : Controller
 
         if (existingUser != null)
         {
-            return BadRequest("User has already existed!");
+            return BadRequest("Tên đăng nhập này đã tồn tại!");
         }
 
         var registered = await _userLogic.SaveUser(requestModel);
@@ -101,7 +101,7 @@ public class AuthenticateController : Controller
         }
         catch
         {
-            return BadRequest("Can not update image");
+            return BadRequest("Không thể tải hình ảnh lên");
         }
     }
 
