@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DiaryReactNativeBackend.Repositories.Models;
-using DiaryReactNativeBackend.RequestModels;
+using DiaryReactNativeBackend.RequestModels.Topic;
 using DiaryReactNativeBackend.ResponseModels;
 
 namespace DiaryReactNativeBackend.Mappers;
@@ -12,6 +12,7 @@ public class TopicMapperProfile : Profile
         CreateMap<CreateTopicRequestModel, TopicModel>();
         CreateMap<UpdateTopicRequestModel, TopicModel>();
 
-        CreateMap<TopicModel, TopicResponseModel>();
+        CreateMap<TopicModel, DiaryBasicResponseModel>();
+        CreateMap<TopicModel, DiaryDetailResponseModel>();
     }
 }

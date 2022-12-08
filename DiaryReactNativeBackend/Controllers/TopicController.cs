@@ -1,6 +1,6 @@
 ﻿using DiaryReactNativeBackend.Logics.Abstractions;
 using DiaryReactNativeBackend.Logics.Implementations;
-using DiaryReactNativeBackend.RequestModels;
+using DiaryReactNativeBackend.RequestModels.Topic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiaryReactNativeBackend.Controllers;
@@ -26,7 +26,7 @@ public class TopicController : Controller
 
         if(existedTopic != null)
         {
-            return BadRequest("Topic name has already existed!");
+            return BadRequest("Tên chủ đề này đã tồn tại");
         }
 
         try
@@ -36,7 +36,7 @@ public class TopicController : Controller
         }
         catch
         {
-            return BadRequest("Can not create topic");
+            return BadRequest("Tạo chủ đề không thành công. Vui lòng thử lại!");
         }
     }
 
@@ -44,21 +44,21 @@ public class TopicController : Controller
     [Route("update-topic")]
     public async Task<IActionResult> UpdateTopic(UpdateTopicRequestModel requestModel)
     {
-        var topics = await _topicLogic.GetAllTopics();
-        var existedTopic = topics.FirstOrDefault(x => x.Name == requestModel.Name);
+        var topicsByUserId = await _topicLogic.GetTopicsByUserId(requestModel.UserId);
+        var existedTopic = topicsByUserId.FirstOrDefault(x => x.Name == requestModel.Name);
 
         if (existedTopic != null)
         {
-            return BadRequest("Topic name has already existed!");
+            return BadRequest("Tên chủ đề này đã tồn tại");
         }
         try
         {
-            var topicUpdatedId = await _topicLogic.UpdateTopic(requestModel);
-            return Ok(topicUpdatedId);
+            var topicUpdated = await _topicLogic.UpdateTopic(requestModel);
+            return Ok(topicUpdated);
         }
         catch
         {
-            return BadRequest("Can not update topic for now");
+            return BadRequest("Đổi tên chủ đề không thành công. Vui lòng thử lại!");
         }
     }
 

@@ -35,4 +35,9 @@ public class HashKeyOnlyRepositoryBase<T, H>
     {
         await _dbContext.SaveAsync(t);
     }
+
+    protected async Task DeleteAsync(T t)
+    {
+        await _dbContext.DeleteAsync(t);
+    }
 }

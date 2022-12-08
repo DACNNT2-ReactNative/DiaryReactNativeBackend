@@ -16,9 +16,6 @@ public class UserModel
     [DynamoDBProperty("password")]
     public string Password { get; set; }
 
-    [DynamoDBProperty("email")]
-    public string Email { get; set; }
-
     [DynamoDBProperty("fullName")]
     public string FullName { get; set; }
 

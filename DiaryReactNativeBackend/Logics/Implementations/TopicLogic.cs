@@ -2,8 +2,9 @@
 using DiaryReactNativeBackend.Logics.Abstractions;
 using DiaryReactNativeBackend.Repositories.Abstractions;
 using DiaryReactNativeBackend.Repositories.Models;
-using DiaryReactNativeBackend.RequestModels;
+using DiaryReactNativeBackend.RequestModels.Topic;
 using DiaryReactNativeBackend.ResponseModels;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DiaryReactNativeBackend.Logics.Implementations;
 
@@ -18,22 +19,29 @@ public class TopicLogic : ITopicLogic
         _mapper = mapper;
     }
 
-    public async Task<string> SaveTopic(CreateTopicRequestModel requestModel)
+    public async Task<TopicResponseModel> SaveTopic(CreateTopicRequestModel requestModel)
     {
         var topic = _mapper.Map<CreateTopicRequestModel, TopicModel>(requestModel);
 
         topic.TopicId = Guid.NewGuid().ToString();
         topic.CreateAt = DateTime.Now;
 
-        var topicId = await _topicRepository.SaveTopic(topic);
-
-        return topicId;
+        try
+        {
+            var topicId = await _topicRepository.SaveTopic(topic);
+            var topicResponse = _mapper.Map<TopicModel, TopicResponseModel>(topic);
+            return topicResponse;
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task<List<TopicResponseModel>> GetTopicsByUserId(string userId)
     {
         var topicsResponse = new List<TopicResponseModel>();
-        var topics = await _topicRepository.GetAllTopics();
+        var topics = await GetAllTopics();
 
         var topicsByUserId = topics.Where(t => t.UserId == userId).ToList();
 
@@ -46,16 +54,23 @@ public class TopicLogic : ITopicLogic
         return topicsResponse;
     }
 
-    public async Task<string> UpdateTopic(UpdateTopicRequestModel requestModel)
+    public async Task<TopicResponseModel> UpdateTopic(UpdateTopicRequestModel requestModel)
     {
         var existingTopic = await _topicRepository.GetTopicById(requestModel.TopicId);
         var topicUpdating = _mapper.Map<UpdateTopicRequestModel, TopicModel>(requestModel);
         topicUpdating.UserId = existingTopic.UserId;
         topicUpdating.CreateAt = existingTopic.CreateAt;
 
-        var topicUpdatedId = await _topicRepository.SaveTopic(topicUpdating);
-
-        return topicUpdatedId;
+        try
+        {
+            var topicUpdatedId = await _topicRepository.SaveTopic(topicUpdating);
+            var topicResponse = _mapper.Map<TopicModel, TopicResponseModel>(topicUpdating);
+            return topicResponse;
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }        
     }
 
     public async Task<List<TopicModel>> GetAllTopics()

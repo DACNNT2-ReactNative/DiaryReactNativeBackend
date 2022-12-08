@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace DiaryReactNativeBackend.RequestModels;
+namespace DiaryReactNativeBackend.RequestModels.Topic;
 
 public class CreateTopicRequestModel
 {

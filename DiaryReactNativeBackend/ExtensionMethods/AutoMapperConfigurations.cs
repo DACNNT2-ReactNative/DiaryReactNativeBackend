@@ -8,5 +8,6 @@ public static class AutoMapperConfigurations
     {
         services.AddAutoMapper(typeof(UserMapperProfile).Assembly);
         services.AddAutoMapper(typeof(TopicMapperProfile).Assembly);
+        services.AddAutoMapper(typeof(DiaryMapperProfile).Assembly);
     }
 }
