@@ -1,4 +1,5 @@
-﻿using DiaryReactNativeBackend.Logics.Abstractions;
+﻿using DiaryReactNativeBackend.AppExceptions;
+using DiaryReactNativeBackend.Logics.Abstractions;
 using DiaryReactNativeBackend.Logics.Implementations;
 using DiaryReactNativeBackend.RequestModels.Topic;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,10 @@ public class TopicController : Controller
             var topicUpdated = await _topicLogic.UpdateTopic(requestModel);
             return Ok(topicUpdated);
         }
+        catch (CustomException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         catch
         {
             return BadRequest("Đổi tên chủ đề không thành công. Vui lòng thử lại!");
@@ -69,5 +74,24 @@ public class TopicController : Controller
         var topics = await _topicLogic.GetTopicsByUserId(userId);
 
         return Ok(topics);
+    }
+
+    [HttpDelete]
+    [Route("delete-topic-by-id")]
+    public async Task<IActionResult> DeleteTopicById(string topicId)
+    {
+        try
+        {
+            var topicDeleted = await _topicLogic.DeleteTopicById(topicId);
+            return Ok(topicDeleted);
+        }
+        catch (CustomException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch
+        {
+            return BadRequest("Xóa chủ đề không thành công");
+        }
     }
 }

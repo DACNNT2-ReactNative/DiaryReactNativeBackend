@@ -26,4 +26,9 @@ public class TopicRepository : HashKeyOnlyRepositoryBase<TopicModel, string>, IT
     {
         return await GetByHashKey(topicId);
     }
+
+    public async Task DeleteTopic(TopicModel topic)
+    {
+        await DeleteAsync(topic);
+    }
 }

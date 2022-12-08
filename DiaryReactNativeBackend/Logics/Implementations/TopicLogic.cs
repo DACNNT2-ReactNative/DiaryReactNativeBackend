@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DiaryReactNativeBackend.AppExceptions;
 using DiaryReactNativeBackend.Logics.Abstractions;
 using DiaryReactNativeBackend.Repositories.Abstractions;
+using DiaryReactNativeBackend.Repositories.Implementations;
 using DiaryReactNativeBackend.Repositories.Models;
 using DiaryReactNativeBackend.RequestModels.Topic;
 using DiaryReactNativeBackend.ResponseModels;
@@ -57,6 +59,8 @@ public class TopicLogic : ITopicLogic
     public async Task<TopicResponseModel> UpdateTopic(UpdateTopicRequestModel requestModel)
     {
         var existingTopic = await _topicRepository.GetTopicById(requestModel.TopicId);
+        if (existingTopic == null) throw new CustomException("Chủ đề không tồn tại");
+
         var topicUpdating = _mapper.Map<UpdateTopicRequestModel, TopicModel>(requestModel);
         topicUpdating.UserId = existingTopic.UserId;
         topicUpdating.CreateAt = existingTopic.CreateAt;
@@ -76,5 +80,21 @@ public class TopicLogic : ITopicLogic
     public async Task<List<TopicModel>> GetAllTopics()
     {
         return await _topicRepository.GetAllTopics();
+    }
+
+    public async Task<string> DeleteTopicById(string topicId)
+    {
+        var existingTopic = await _topicRepository.GetTopicById(topicId);
+        if (existingTopic == null) throw new CustomException("Chủ đề không tồn tại");
+
+        try
+        {
+            await _topicRepository.DeleteTopic(existingTopic);
+            return topicId;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 }

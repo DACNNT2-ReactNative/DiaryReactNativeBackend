@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DiaryReactNativeBackend.AppExceptions;
 using DiaryReactNativeBackend.Logics.Abstractions;
 using DiaryReactNativeBackend.Repositories.Abstractions;
 using DiaryReactNativeBackend.Repositories.Models;
@@ -67,7 +68,8 @@ public class DiaryLogic : IDiaryLogic
     public async Task<string> UpdateDiary(UpdateDiaryRequestModel requestModel)
     {
         var existingDiary = await _diaryRepository.GetDiaryById(requestModel.DiaryId);
-        if (existingDiary == null) throw new Exception("error");
+        if (existingDiary == null) throw new CustomException("Nhật ký không tồn tại");
+
         var diaryUpdating = _mapper.Map<UpdateDiaryRequestModel, DiaryModel>(requestModel);
         diaryUpdating.UserId = existingDiary.UserId;
         diaryUpdating.TopicId = existingDiary.TopicId;
@@ -92,7 +94,8 @@ public class DiaryLogic : IDiaryLogic
     public async Task<string> DeleteDiaryById(string diaryId)
     {
         var existingDiary = await _diaryRepository.GetDiaryById(diaryId);
-        if (existingDiary == null) throw new Exception("error");
+        if (existingDiary == null) throw new CustomException("Nhật ký không tồn tại");
+
         try
         {
             await _diaryRepository.DeleteDiary(existingDiary);

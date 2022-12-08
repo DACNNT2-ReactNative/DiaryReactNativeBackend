@@ -1,4 +1,5 @@
-﻿using DiaryReactNativeBackend.Logics.Abstractions;
+﻿using DiaryReactNativeBackend.AppExceptions;
+using DiaryReactNativeBackend.Logics.Abstractions;
 using DiaryReactNativeBackend.Logics.Implementations;
 using DiaryReactNativeBackend.RequestModels.Diary;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,10 @@ public class DiaryController : Controller
             var diaryUpdated = await _diaryLogic.UpdateDiary(requestModel);
             return Ok(diaryUpdated);
         }
+        catch (CustomException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         catch
         {
             return BadRequest("Lưu nhật ký không thành công.");
@@ -84,6 +89,10 @@ public class DiaryController : Controller
         {
             var diaryDeleted = await _diaryLogic.DeleteDiaryById(diaryId);
             return Ok(diaryDeleted);
+        }
+        catch(CustomException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch
         {

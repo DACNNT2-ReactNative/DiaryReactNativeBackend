@@ -12,7 +12,6 @@ public class TopicMapperProfile : Profile
         CreateMap<CreateTopicRequestModel, TopicModel>();
         CreateMap<UpdateTopicRequestModel, TopicModel>();
 
-        CreateMap<TopicModel, DiaryBasicResponseModel>();
-        CreateMap<TopicModel, DiaryDetailResponseModel>();
+        CreateMap<TopicModel, TopicResponseModel>();
     }
 }

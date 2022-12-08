@@ -10,4 +10,5 @@ public interface ITopicLogic
     Task<List<TopicResponseModel>> GetTopicsByUserId(string userId);
     Task<TopicResponseModel> UpdateTopic(UpdateTopicRequestModel requestModel);
     Task<List<TopicModel>> GetAllTopics();
+    Task<string> DeleteTopicById(string topicId);
 }
