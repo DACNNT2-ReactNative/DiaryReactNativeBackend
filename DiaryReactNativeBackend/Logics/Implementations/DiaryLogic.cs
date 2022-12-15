@@ -24,15 +24,15 @@ public class DiaryLogic : IDiaryLogic
         return await _diaryRepository.GetAllDiaries();
     }
 
-    public async Task<List<DiaryBasicResponseModel>> GetDiariesByTopicId(string topicId)
+    public async Task<List<DiaryDetailResponseModel>> GetDiariesByTopicId(string topicId)
     {
-        var diariesResponse = new List<DiaryBasicResponseModel>();
+        var diariesResponse = new List<DiaryDetailResponseModel>();
         var diaries = await GetAllDiaries();
         var diraiesByUserIdAndTopicId = diaries.Where(d => d.TopicId == topicId).ToList();
 
         foreach (var diary in diraiesByUserIdAndTopicId)
         {
-            var diaryResponse = _mapper.Map<DiaryModel, DiaryBasicResponseModel>(diary);
+            var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
             diariesResponse.Add(diaryResponse);
         }
 
