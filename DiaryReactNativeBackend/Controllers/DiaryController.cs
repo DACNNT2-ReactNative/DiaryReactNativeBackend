@@ -3,6 +3,7 @@ using DiaryReactNativeBackend.Logics.Abstractions;
 using DiaryReactNativeBackend.Logics.Implementations;
 using DiaryReactNativeBackend.RequestModels.Diary;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DiaryReactNativeBackend.Controllers;
 
@@ -59,7 +60,21 @@ public class DiaryController : Controller
     {
         var diaries = await _diaryLogic.GetDiariesByTopicId(topicId);
 
-        return Ok(diaries);
+        foreach (var diary in diaries)
+        {
+            if (diary.Content.IsNullOrEmpty())
+            {
+                try
+                {
+                    await _diaryLogic.DeleteDiaryById(diary.DiaryId);
+                }
+                catch { }
+            }
+        }
+
+        var results = diaries.Where(d => d.Content.IsNullOrEmpty() == false).ToList();
+
+        return Ok(results);
     }
 
     [HttpGet]
@@ -69,7 +84,7 @@ public class DiaryController : Controller
         try
         {
             var diary = await _diaryLogic.GetDiaryById(diaryId);
-            if(diary == null)
+            if (diary == null)
             {
                 return BadRequest("Nhật ký không tồn tại");
             }
@@ -90,7 +105,7 @@ public class DiaryController : Controller
             var diaryDeleted = await _diaryLogic.DeleteDiaryById(diaryId);
             return Ok(diaryDeleted);
         }
-        catch(CustomException ex)
+        catch (CustomException ex)
         {
             return BadRequest(ex.Message);
         }

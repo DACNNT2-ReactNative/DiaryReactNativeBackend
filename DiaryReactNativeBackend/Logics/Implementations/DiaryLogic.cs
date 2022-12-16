@@ -28,9 +28,9 @@ public class DiaryLogic : IDiaryLogic
     {
         var diariesResponse = new List<DiaryDetailResponseModel>();
         var diaries = await GetAllDiaries();
-        var diraiesByUserIdAndTopicId = diaries.Where(d => d.TopicId == topicId).ToList();
+        var diraiesByTopicId = diaries.Where(d => d.TopicId == topicId).ToList();
 
-        foreach (var diary in diraiesByUserIdAndTopicId)
+        foreach (var diary in diraiesByTopicId)
         {
             var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
             diariesResponse.Add(diaryResponse);
