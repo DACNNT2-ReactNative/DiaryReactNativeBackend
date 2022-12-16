@@ -47,7 +47,7 @@ public class DiaryLogic : IDiaryLogic
         return diaryResponse;
     }
 
-    public async Task<string> SaveDiary(CreateDiaryRequestModel requestModel)
+    public async Task<DiaryDetailResponseModel> SaveDiary(CreateDiaryRequestModel requestModel)
     {
         var diary = _mapper.Map<CreateDiaryRequestModel, DiaryModel>(requestModel);
         diary.DiaryId = Guid.NewGuid().ToString();
@@ -57,7 +57,8 @@ public class DiaryLogic : IDiaryLogic
         try
         {
             var diaryId = await _diaryRepository.SaveDiary(diary);
-            return diaryId;
+            var diaryResult = await GetDiaryById(diaryId);
+            return diaryResult;
         }
         catch(Exception ex)
         {

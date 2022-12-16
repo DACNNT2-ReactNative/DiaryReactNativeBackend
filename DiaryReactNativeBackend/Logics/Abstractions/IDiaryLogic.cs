@@ -7,7 +7,7 @@ namespace DiaryReactNativeBackend.Logics.Abstractions;
 
 public interface IDiaryLogic
 {
-    Task<string> SaveDiary(CreateDiaryRequestModel requestModel);
+    Task<DiaryDetailResponseModel> SaveDiary(CreateDiaryRequestModel requestModel);
     Task<List<DiaryDetailResponseModel>> GetDiariesByTopicId(string topicId);
     Task<DiaryDetailResponseModel> GetDiaryById(string diaryId);
     Task<string> UpdateDiary(UpdateDiaryRequestModel requestModel);
