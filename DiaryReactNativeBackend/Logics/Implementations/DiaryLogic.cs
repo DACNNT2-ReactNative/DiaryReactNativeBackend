@@ -66,7 +66,7 @@ public class DiaryLogic : IDiaryLogic
         }
     }
 
-    public async Task<string> UpdateDiary(UpdateDiaryRequestModel requestModel)
+    public async Task<DiaryDetailResponseModel> UpdateDiary(UpdateDiaryRequestModel requestModel)
     {
         var existingDiary = await _diaryRepository.GetDiaryById(requestModel.DiaryId);
         if (existingDiary == null) throw new CustomException("Nhật ký không tồn tại");
@@ -84,7 +84,8 @@ public class DiaryLogic : IDiaryLogic
         try
         {
             var diaryId = await _diaryRepository.SaveDiary(diaryUpdating);
-            return diaryId;
+            var diaryResult = await GetDiaryById(diaryId);
+            return diaryResult;
         }
         catch (Exception ex)
         {
