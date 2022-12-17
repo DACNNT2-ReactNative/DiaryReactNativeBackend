@@ -9,4 +9,6 @@ public class TopicResponseModel
     public string UserId { get; set; }
 
     public string Name { get; set; }
+
+    public string Image { get; set; }
 }

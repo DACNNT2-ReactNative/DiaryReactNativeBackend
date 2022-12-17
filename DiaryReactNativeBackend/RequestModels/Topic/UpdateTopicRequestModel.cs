@@ -11,7 +11,8 @@ namespace DiaryReactNativeBackend.RequestModels.Topic
         [Required]
         public string UserId { get; set; }
 
-        [Required]
         public string Name { get; set; }
+
+        public string Image { get; set; }
     }
 }

@@ -64,6 +64,8 @@ public class TopicLogic : ITopicLogic
         var topicUpdating = _mapper.Map<UpdateTopicRequestModel, TopicModel>(requestModel);
         topicUpdating.UserId = existingTopic.UserId;
         topicUpdating.CreateAt = existingTopic.CreateAt;
+        topicUpdating.Name = requestModel.Name == null ? existingTopic.Name : requestModel.Name;
+        topicUpdating.Image = requestModel.Image == null ? existingTopic.Image : requestModel.Image;
 
         try
         {

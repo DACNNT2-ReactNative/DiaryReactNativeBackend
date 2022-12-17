@@ -16,6 +16,9 @@ public class TopicModel
     [DynamoDBProperty("Name")]
     public string Name { get; set; }
 
+    [DynamoDBProperty("Image")]
+    public string Image { get; set; }
+
     [DynamoDBProperty("createAt")]
     public DateTime CreateAt { get; set; }
 }
