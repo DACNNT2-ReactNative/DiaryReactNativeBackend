@@ -14,6 +14,8 @@ public class DiaryBasicResponseModel
 
     public string Status { get; set; }
 
+    public bool? isLiked { get; set; }
+
     public string Type { get; set; }
 
     public DateTime CreateAt { get; set; }

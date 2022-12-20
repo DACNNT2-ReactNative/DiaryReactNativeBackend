@@ -25,6 +25,9 @@ public class DiaryModel
     [DynamoDBProperty("status")]
     public string Status { get; set; }
 
+    [DynamoDBProperty("isLiked")]
+    public bool? isLiked { get; set; }
+
     [DynamoDBProperty("type")]
     public string Type { get; set; }
 

@@ -96,6 +96,15 @@ public class DiaryController : Controller
         }
     }
 
+    [HttpGet]
+    [Route("get-favorite-diaries-by-user-id")]
+    public async Task<IActionResult> GetFavoriteDiariesByUserId(string userId)
+    {
+        var diaries = await _diaryLogic.GetFavoriteDiariesByUserId(userId);
+
+        return Ok(diaries);
+    }
+
     [HttpDelete]
     [Route("delete-diary-by-id")]
     public async Task<IActionResult> DeleteDiaryById(string diaryId)

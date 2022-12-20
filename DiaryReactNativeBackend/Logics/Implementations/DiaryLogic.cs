@@ -47,10 +47,26 @@ public class DiaryLogic : IDiaryLogic
         return diaryResponse;
     }
 
+    public async Task<List<DiaryDetailResponseModel>> GetFavoriteDiariesByUserId(string userId)
+    {
+        var diariesResponse = new List<DiaryDetailResponseModel>();
+        var diaries = await GetAllDiaries();
+        var favoriteDiraies = diaries.Where(d => d.UserId == userId && d.isLiked == true).ToList();
+
+        foreach (var diary in favoriteDiraies)
+        {
+            var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
+            diariesResponse.Add(diaryResponse);
+        }
+
+        return diariesResponse;
+    }
+
     public async Task<DiaryDetailResponseModel> SaveDiary(CreateDiaryRequestModel requestModel)
     {
         var diary = _mapper.Map<CreateDiaryRequestModel, DiaryModel>(requestModel);
         diary.DiaryId = Guid.NewGuid().ToString();
+        diary.Status = "private";
         diary.CreateAt = DateTime.Now;
         diary.UpdateAt = DateTime.Now;
 
@@ -78,6 +94,7 @@ public class DiaryLogic : IDiaryLogic
         diaryUpdating.Title = requestModel.Title == null ? existingDiary.Title : requestModel.Title;
         diaryUpdating.Content = requestModel.Content == null ? existingDiary.Content : requestModel.Content;
         diaryUpdating.Status = requestModel.Status == null ? existingDiary.Status : requestModel.Status;
+        diaryUpdating.isLiked = requestModel.isLiked == null ? existingDiary.isLiked : requestModel.isLiked;
         diaryUpdating.Type = requestModel.Type == null ? existingDiary.Type : requestModel.Type;
         diaryUpdating.UpdateAt = DateTime.Now;
 

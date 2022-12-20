@@ -15,5 +15,7 @@ public class UpdateDiaryRequestModel
 
     public string Status { get; set; }
 
+    public bool? isLiked { get; set; }
+
     public string Type { get; set; }
 }

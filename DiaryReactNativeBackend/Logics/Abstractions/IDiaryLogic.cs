@@ -10,6 +10,7 @@ public interface IDiaryLogic
     Task<DiaryDetailResponseModel> SaveDiary(CreateDiaryRequestModel requestModel);
     Task<List<DiaryDetailResponseModel>> GetDiariesByTopicId(string topicId);
     Task<DiaryDetailResponseModel> GetDiaryById(string diaryId);
+    Task<List<DiaryDetailResponseModel>> GetFavoriteDiariesByUserId(string userId);
     Task<DiaryDetailResponseModel> UpdateDiary(UpdateDiaryRequestModel requestModel);
     Task<List<DiaryModel>> GetAllDiaries();
     Task<string> DeleteDiaryById(string diaryId);
