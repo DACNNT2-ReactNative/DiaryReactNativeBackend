@@ -94,7 +94,7 @@ public class AuthenticateController : Controller
     {
         try
         {
-            var objUpload = new S3ObjectUpload(requestModel.ImageName, requestModel.Base64String, "osd-hr-management", "public/image");
+            var objUpload = new S3ObjectUpload(requestModel.ImageName, requestModel.Base64String, "diary-react-native-store", "public/image");
             var path = await _storeService.UploadFileAsync(objUpload);
 
             return Ok(path);
