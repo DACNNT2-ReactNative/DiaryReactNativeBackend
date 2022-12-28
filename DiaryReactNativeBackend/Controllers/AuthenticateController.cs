@@ -1,8 +1,11 @@
 ﻿using Amazon.Runtime;
+using DiaryReactNativeBackend.AppExceptions;
 using DiaryReactNativeBackend.Logics.Abstractions;
 using DiaryReactNativeBackend.Logics.Helpers;
+using DiaryReactNativeBackend.Logics.Implementations;
 using DiaryReactNativeBackend.Repositories.Models;
 using DiaryReactNativeBackend.RequestModels;
+using DiaryReactNativeBackend.RequestModels.User;
 using DiaryReactNativeBackend.Services.Abstractions;
 using DiaryReactNativeBackend.Services.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -47,6 +50,20 @@ public class AuthenticateController : Controller
         {
             return Unauthorized("Sai tên đăng nhập hoặc mật khẩu ");
         }
+
+        if(existingUser.IsProtected)
+        {
+            if(requestModel.PassCode == null)
+            {
+                return BadRequest(new {message="Vui lòng nhập mã bảo mật", status=400});
+            }
+
+            if (requestModel.PassCode != existingUser.PassCode)
+            {
+                return Unauthorized("Sai mã bảo mật");
+            }
+        }
+
 
         var authClaims = new List<Claim>
         {
@@ -128,4 +145,37 @@ public class AuthenticateController : Controller
 
         return Ok(user);
     }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("user-info")]
+    public async Task<IActionResult> GetUserInfo(string userId)
+    {
+        var user = await _userLogic.GetUserById(userId);
+
+        return Ok(user);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("update-user")]
+    public async Task<IActionResult> UpdateUser(UpdateUserRequestModel updateUserRequestModel)
+    {
+        try
+        {
+            var userUpdated = await _userLogic.UpdateUser(updateUserRequestModel);
+            return Ok("Cập nhật thông tin thành công");
+        }
+        catch (CustomException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch
+        {
+            return BadRequest("Cập nhật thông tin không thành công, vui lòng thử lại");
+        }
+
+    }
+
 }

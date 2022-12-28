@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using DiaryReactNativeBackend.AppExceptions;
 using DiaryReactNativeBackend.Logics.Abstractions;
 using DiaryReactNativeBackend.Logics.Helpers;
 using DiaryReactNativeBackend.Repositories.Abstractions;
+using DiaryReactNativeBackend.Repositories.Implementations;
 using DiaryReactNativeBackend.Repositories.Models;
+using DiaryReactNativeBackend.RequestModels.User;
 using DiaryReactNativeBackend.ResponseModels;
 
 namespace DiaryReactNativeBackend.Logics.Implementations;
@@ -64,5 +67,27 @@ public class UserLogic : IUserLogic
         var userResponse = _mapper.Map<UserModel, UserResponseModel>(user);
 
         return userResponse;
+    }
+
+    public async Task<string> UpdateUser(UpdateUserRequestModel requestModel)
+    {
+        var isExistingUser = await _userRepository.GetUserById(requestModel.UserId);
+        if (isExistingUser == null) throw new CustomException("Tài khoản không tôn tại");
+
+        if(requestModel.PassCode != null)
+        {
+            isExistingUser.PassCode = requestModel.PassCode;
+            isExistingUser.IsProtected = true;
+            isExistingUser.FullName= requestModel.FullName;
+        }
+        try
+        {
+            var userUpdatedId = await _userRepository.SaveUser(isExistingUser);
+            return userUpdatedId;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 }
