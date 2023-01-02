@@ -105,6 +105,15 @@ public class DiaryController : Controller
         return Ok(diaries);
     }
 
+    [HttpGet]
+    [Route("get-public-diaries")]
+    public async Task<IActionResult> GetPublicDiaries()
+    {
+        var diaries = await _diaryLogic.GetPublicDiaries();
+
+        return Ok(diaries);
+    }
+
     [HttpDelete]
     [Route("delete-diary-by-id")]
     public async Task<IActionResult> DeleteDiaryById(string diaryId)
