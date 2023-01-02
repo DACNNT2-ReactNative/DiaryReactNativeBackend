@@ -11,6 +11,7 @@ public interface IDiaryLogic
     Task<List<DiaryDetailResponseModel>> GetDiariesByTopicId(string topicId);
     Task<DiaryDetailResponseModel> GetDiaryById(string diaryId);
     Task<List<DiaryDetailResponseModel>> GetFavoriteDiariesByUserId(string userId);
+    Task<List<DiaryDetailResponseModel>> GetSharedDiariesByUserId(string userId);
     Task<List<DiaryDetailResponseModel>> GetPublicDiaries();
     Task<DiaryDetailResponseModel> UpdateDiary(UpdateDiaryRequestModel requestModel);
     Task<List<DiaryModel>> GetAllDiaries();

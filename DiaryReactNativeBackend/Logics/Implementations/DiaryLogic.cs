@@ -3,6 +3,7 @@ using DiaryReactNativeBackend.AppExceptions;
 using DiaryReactNativeBackend.Constant;
 using DiaryReactNativeBackend.Logics.Abstractions;
 using DiaryReactNativeBackend.Repositories.Abstractions;
+using DiaryReactNativeBackend.Repositories.Implementations;
 using DiaryReactNativeBackend.Repositories.Models;
 using DiaryReactNativeBackend.RequestModels.Diary;
 using DiaryReactNativeBackend.ResponseModels;
@@ -12,11 +13,13 @@ namespace DiaryReactNativeBackend.Logics.Implementations;
 public class DiaryLogic : IDiaryLogic
 {
     private readonly IDiaryRepository _diaryRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public DiaryLogic(IDiaryRepository diaryRepository, IMapper mapper)
+    public DiaryLogic(IDiaryRepository diaryRepository, IUserRepository userRepository, IMapper mapper)
     {
         _diaryRepository = diaryRepository;
+        _userRepository = userRepository;
         _mapper = mapper;
     }    
 
@@ -63,15 +66,32 @@ public class DiaryLogic : IDiaryLogic
         return diariesResponse;
     }
 
+    public async Task<List<DiaryDetailResponseModel>> GetSharedDiariesByUserId(string userId)
+    {
+        var diariesResponse = new List<DiaryDetailResponseModel>();
+        var diaries = await GetAllDiaries();
+        var sharedDiraies = diaries.Where(d => d.UserId == userId && d.Status == Constants.DiaryStatus.PUBLIC).ToList();
+
+        foreach (var diary in sharedDiraies)
+        {
+            var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
+            diariesResponse.Add(diaryResponse);
+        }
+
+        return diariesResponse;
+    }
+
     public async Task<List<DiaryDetailResponseModel>> GetPublicDiaries()
     {
         var diariesResponse = new List<DiaryDetailResponseModel>();
         var diaries = await GetAllDiaries();
-        var publicDiraies = diaries.Where(d => d.Status == Constants.Status.PUBLIC).ToList();
+        var publicDiraies = diaries.Where(d => d.Status == Constants.DiaryStatus.PUBLIC).ToList();
 
         foreach (var diary in publicDiraies)
         {
             var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
+            var user = await _userRepository.GetUserById(diaryResponse.UserId);
+            diaryResponse.UserFullName = user.FullName;
             diariesResponse.Add(diaryResponse);
         }
 
@@ -82,7 +102,7 @@ public class DiaryLogic : IDiaryLogic
     {
         var diary = _mapper.Map<CreateDiaryRequestModel, DiaryModel>(requestModel);
         diary.DiaryId = Guid.NewGuid().ToString();
-        diary.Status = Constants.Status.PRIVATE;
+        diary.Status = Constants.DiaryStatus.PRIVATE;
         diary.CreateAt = DateTime.Now;
         diary.UpdateAt = DateTime.Now;
 

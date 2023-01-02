@@ -106,6 +106,15 @@ public class DiaryController : Controller
     }
 
     [HttpGet]
+    [Route("get-shared-diaries-by-user-id")]
+    public async Task<IActionResult> GetSharedDiariesByUserId(string userId)
+    {
+        var diaries = await _diaryLogic.GetSharedDiariesByUserId(userId);
+
+        return Ok(diaries);
+    }
+
+    [HttpGet]
     [Route("get-public-diaries")]
     public async Task<IActionResult> GetPublicDiaries()
     {

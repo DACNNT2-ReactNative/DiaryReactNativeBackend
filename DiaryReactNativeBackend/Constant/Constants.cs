@@ -2,7 +2,7 @@
 {
     public static class Constants
     {
-        public static class Status
+        public static class DiaryStatus
         {
             public const string PRIVATE = "private";
             public const string PUBLIC = "public";
