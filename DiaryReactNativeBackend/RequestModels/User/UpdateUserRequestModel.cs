@@ -10,5 +10,7 @@ namespace DiaryReactNativeBackend.RequestModels.User
         public string PassCode { get; set; }
 
         public string FullName { get; set; }
+
+        public string Password { get; set; }
     }
 }

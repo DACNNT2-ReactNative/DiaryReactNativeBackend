@@ -35,6 +35,19 @@ public class UserLogic : IUserLogic
         return userId;
     }
 
+    public async Task<UserModel> SaveUserGoogle(LoginGoogleRequestModel requestModel)
+    {
+        var user = _mapper.Map<LoginGoogleRequestModel, UserModel>(requestModel);
+
+        user.UserId = Guid.NewGuid().ToString();
+        user.IsProtected = false;
+        user.CreateAt = DateTime.Now;
+
+        var userId = await _userRepository.SaveUser(user);
+
+        return user;
+    }
+
     public async Task<IEnumerable<UserModel>> GetAllUsers()
     {
         return await _userRepository.GetAllUsers();
@@ -78,8 +91,12 @@ public class UserLogic : IUserLogic
         {
             isExistingUser.PassCode = requestModel.PassCode;
             isExistingUser.IsProtected = true;
-            isExistingUser.FullName= requestModel.FullName;
         }
+
+        if(requestModel.FullName != null) { 
+            isExistingUser.FullName = requestModel.FullName;
+        }
+
         try
         {
             var userUpdatedId = await _userRepository.SaveUser(isExistingUser);

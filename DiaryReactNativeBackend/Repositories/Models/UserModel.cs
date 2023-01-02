@@ -25,6 +25,9 @@ public class UserModel
     [DynamoDBProperty("passCode")]
     public string PassCode { get; set; }
 
+    [DynamoDBProperty("email")]
+    public string Email { get; set; }
+
     [DynamoDBProperty("createAt")]
     public DateTime CreateAt { get; set; }
 }

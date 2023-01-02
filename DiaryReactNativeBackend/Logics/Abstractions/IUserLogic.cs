@@ -12,4 +12,6 @@ public interface IUserLogic
     Task<UserResponseModel> GetUserById(string userId);
 
     Task<string> UpdateUser(UpdateUserRequestModel requestModel);
+
+    Task<UserModel> SaveUserGoogle(LoginGoogleRequestModel requestModel);
 }

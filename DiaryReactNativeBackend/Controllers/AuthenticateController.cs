@@ -178,4 +178,62 @@ public class AuthenticateController : Controller
 
     }
 
+    [HttpPost]
+    [Route("login-google")]
+    public async Task<IActionResult> LoginGoogle(LoginGoogleRequestModel requestModel)
+    {
+        var allUsers = await _userLogic.GetAllUsers();
+
+        var existingUser = allUsers.FirstOrDefault(u =>
+            u.Username == requestModel.Username);
+
+        if (existingUser != null)
+        {
+            var authClaimsNotNull = new List<Claim>
+        {
+            new(ClaimTypes.Name, requestModel.Username),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new("UserId", existingUser.UserId)
+        };
+
+            var authSigninKeyNotNull = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+
+            var tokenNotNull = new JwtSecurityToken(
+                issuer: _configuration["JWT:ValidIssuer"],
+                expires: DateTime.Now.AddDays(30),
+                audience: _configuration["JWT:ValidAudience"],
+                claims: authClaimsNotNull,
+                signingCredentials: new SigningCredentials(authSigninKeyNotNull, SecurityAlgorithms.HmacSha256)); ;
+
+            return Ok(new
+            {
+                token = new JwtSecurityTokenHandler().WriteToken(tokenNotNull)
+            });
+        }
+
+        var registered = await _userLogic.SaveUserGoogle(requestModel);
+
+        var authClaims = new List<Claim>
+        {
+            new(ClaimTypes.Name, requestModel.Username),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new("UserId", registered.UserId)
+        };
+
+        var authSigninKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+
+        var token = new JwtSecurityToken(
+            issuer: _configuration["JWT:ValidIssuer"],
+            expires: DateTime.Now.AddDays(30),
+            audience: _configuration["JWT:ValidAudience"],
+            claims: authClaims,
+            signingCredentials: new SigningCredentials(authSigninKey, SecurityAlgorithms.HmacSha256)); ;
+
+        return Ok(new
+        {
+            token = new JwtSecurityTokenHandler().WriteToken(token)
+        });
+
+    }
+
 }
