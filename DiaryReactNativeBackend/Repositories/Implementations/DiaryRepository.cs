@@ -8,7 +8,7 @@ public class DiaryRepository : HashKeyOnlyRepositoryBase<DiaryModel, string>, ID
 {
     public DiaryRepository(IDynamoDBContext dbContext) : base(dbContext)
     {
-    }    
+    }
 
     public async Task<List<DiaryModel>> GetAllDiaries()
     {
