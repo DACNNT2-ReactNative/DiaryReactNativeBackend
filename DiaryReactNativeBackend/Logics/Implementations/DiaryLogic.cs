@@ -7,6 +7,8 @@ using DiaryReactNativeBackend.Repositories.Implementations;
 using DiaryReactNativeBackend.Repositories.Models;
 using DiaryReactNativeBackend.RequestModels.Diary;
 using DiaryReactNativeBackend.ResponseModels;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace DiaryReactNativeBackend.Logics.Implementations;
 
@@ -28,19 +30,30 @@ public class DiaryLogic : IDiaryLogic
         return await _diaryRepository.GetAllDiaries();
     }
 
-    public async Task<List<DiaryDetailResponseModel>> GetDiariesByTopicId(string topicId)
+    public async Task<List<DiaryDetailResponseModel>> GetDiariesByTopicId(string topicId, string? searchKey)
     {
         var diariesResponse = new List<DiaryDetailResponseModel>();
         var diaries = await GetAllDiaries();
-        var diraiesByTopicId = diaries.Where(d => d.TopicId == topicId).ToList();
 
-        foreach (var diary in diraiesByTopicId)
-        {
-            var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
-            diariesResponse.Add(diaryResponse);
+        if (searchKey == null || String.IsNullOrEmpty(searchKey)) {
+            var diraiesByTopicId = diaries.Where(d => d.TopicId == topicId).ToList();
+            foreach (var diary in diraiesByTopicId)
+            {
+                var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
+                diariesResponse.Add(diaryResponse);
+            }
+            return diariesResponse;
         }
-
-        return diariesResponse;
+        else
+        {
+            var diraiesByTopicId = diaries.Where(d => d.TopicId == topicId && Regex.Replace(d.Content, "<.*?>", " ").Contains(searchKey)).ToList();
+            foreach (var diary in diraiesByTopicId)
+            {
+                var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
+                diariesResponse.Add(diaryResponse);
+            }
+            return diariesResponse;
+        }
     }
 
     public async Task<DiaryDetailResponseModel> GetDiaryById(string diaryId)
@@ -51,34 +64,58 @@ public class DiaryLogic : IDiaryLogic
         return diaryResponse;
     }
 
-    public async Task<List<DiaryDetailResponseModel>> GetFavoriteDiariesByUserId(string userId)
+    public async Task<List<DiaryDetailResponseModel>> GetFavoriteDiariesByUserId(string userId, string? searchKey)
     {
         var diariesResponse = new List<DiaryDetailResponseModel>();
         var diaries = await GetAllDiaries();
-        var favoriteDiraies = diaries.Where(d => d.UserId == userId && d.isLiked == true).ToList();
 
-        foreach (var diary in favoriteDiraies)
+        if (searchKey == null || String.IsNullOrEmpty(searchKey))
         {
-            var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
-            diariesResponse.Add(diaryResponse);
+            var favoriteDiraies = diaries.Where(d => d.UserId == userId && d.isLiked == true).ToList();
+            foreach (var diary in favoriteDiraies)
+            {
+                var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
+                diariesResponse.Add(diaryResponse);
+            }
+            return diariesResponse;
         }
-
-        return diariesResponse;
+        else
+        {
+            var favoriteDiraies = diaries.Where(d => d.UserId == userId && d.isLiked == true && Regex.Replace(d.Content, "<.*?>", " ").Contains(searchKey)).ToList();
+            foreach (var diary in favoriteDiraies)
+            {
+                var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
+                diariesResponse.Add(diaryResponse);
+            }
+            return diariesResponse;
+        }
     }
 
-    public async Task<List<DiaryDetailResponseModel>> GetSharedDiariesByUserId(string userId)
+    public async Task<List<DiaryDetailResponseModel>> GetSharedDiariesByUserId(string userId, string? searchKey)
     {
         var diariesResponse = new List<DiaryDetailResponseModel>();
         var diaries = await GetAllDiaries();
-        var sharedDiraies = diaries.Where(d => d.UserId == userId && d.Status == Constants.DiaryStatus.PUBLIC).ToList();
 
-        foreach (var diary in sharedDiraies)
+        if (searchKey == null || String.IsNullOrEmpty(searchKey))
         {
-            var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
-            diariesResponse.Add(diaryResponse);
+            var sharedDiraies = diaries.Where(d => d.UserId == userId && d.Status == Constants.DiaryStatus.PUBLIC).ToList();
+            foreach (var diary in sharedDiraies)
+            {
+                var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
+                diariesResponse.Add(diaryResponse);
+            }
+            return diariesResponse;
         }
-
-        return diariesResponse;
+        else
+        {
+            var sharedDiraies = diaries.Where(d => d.UserId == userId && d.Status == Constants.DiaryStatus.PUBLIC && Regex.Replace(d.Content, "<.*?>", " ").Contains(searchKey)).ToList();
+            foreach (var diary in sharedDiraies)
+            {
+                var diaryResponse = _mapper.Map<DiaryModel, DiaryDetailResponseModel>(diary);
+                diariesResponse.Add(diaryResponse);
+            }
+            return diariesResponse;
+        }
     }
 
     public async Task<List<DiaryDetailResponseModel>> GetPublicDiaries()

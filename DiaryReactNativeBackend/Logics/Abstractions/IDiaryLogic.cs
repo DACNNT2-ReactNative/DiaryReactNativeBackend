@@ -8,10 +8,10 @@ namespace DiaryReactNativeBackend.Logics.Abstractions;
 public interface IDiaryLogic
 {
     Task<DiaryDetailResponseModel> SaveDiary(CreateDiaryRequestModel requestModel);
-    Task<List<DiaryDetailResponseModel>> GetDiariesByTopicId(string topicId);
+    Task<List<DiaryDetailResponseModel>> GetDiariesByTopicId(string topicId, string? searchKey);
     Task<DiaryDetailResponseModel> GetDiaryById(string diaryId);
-    Task<List<DiaryDetailResponseModel>> GetFavoriteDiariesByUserId(string userId);
-    Task<List<DiaryDetailResponseModel>> GetSharedDiariesByUserId(string userId);
+    Task<List<DiaryDetailResponseModel>> GetFavoriteDiariesByUserId(string userId, string? searchKey);
+    Task<List<DiaryDetailResponseModel>> GetSharedDiariesByUserId(string userId, string? searchKey);
     Task<List<DiaryDetailResponseModel>> GetPublicDiaries();
     Task<DiaryDetailResponseModel> UpdateDiary(UpdateDiaryRequestModel requestModel);
     Task<List<DiaryModel>> GetAllDiaries();

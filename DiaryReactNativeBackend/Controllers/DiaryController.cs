@@ -56,9 +56,9 @@ public class DiaryController : Controller
 
     [HttpGet]
     [Route("get-diaries-by-topic-id")]
-    public async Task<IActionResult> GetDiariesByTopicId(string topicId)
+    public async Task<IActionResult> GetDiariesByTopicId(string topicId, string? searchKey)
     {
-        var diaries = await _diaryLogic.GetDiariesByTopicId(topicId);
+        var diaries = await _diaryLogic.GetDiariesByTopicId(topicId, searchKey);
 
         foreach (var diary in diaries)
         {
@@ -98,18 +98,18 @@ public class DiaryController : Controller
 
     [HttpGet]
     [Route("get-favorite-diaries-by-user-id")]
-    public async Task<IActionResult> GetFavoriteDiariesByUserId(string userId)
+    public async Task<IActionResult> GetFavoriteDiariesByUserId(string userId, string? searchKey)
     {
-        var diaries = await _diaryLogic.GetFavoriteDiariesByUserId(userId);
+        var diaries = await _diaryLogic.GetFavoriteDiariesByUserId(userId, searchKey);
 
         return Ok(diaries);
     }
 
     [HttpGet]
     [Route("get-shared-diaries-by-user-id")]
-    public async Task<IActionResult> GetSharedDiariesByUserId(string userId)
+    public async Task<IActionResult> GetSharedDiariesByUserId(string userId, string? searchKey)
     {
-        var diaries = await _diaryLogic.GetSharedDiariesByUserId(userId);
+        var diaries = await _diaryLogic.GetSharedDiariesByUserId(userId, searchKey);
 
         return Ok(diaries);
     }
