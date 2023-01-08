@@ -21,15 +21,17 @@ namespace DiaryReactNativeBackend.Logics.Implementations
             _mapper = mapper; 
         }
 
-        public async Task<string> DeleteDeviceById(string deviceId)
+        public async Task<string> DeleteDeviceForUser(string userId, string deviceToken)
         {
-            var existingDevice = await _deviceRepository.GetById(deviceId);
-            if (existingDevice == null) throw new CustomException("Thiết bị không tồn tại");
+            var devices = await GetAllDevices();
+
+            var deviceResponse = devices.FirstOrDefault(d => d.UserId == userId && d.DeviceToken == deviceToken);
+            if (deviceResponse == null) throw new CustomException("Thiết bị không tồn tại");
 
             try
             {
-                await _deviceRepository.Delete(existingDevice);
-                return deviceId;
+                await _deviceRepository.Delete(deviceResponse);
+                return deviceResponse.DeviceId;
             }
             catch (Exception ex)
             {
@@ -52,11 +54,16 @@ namespace DiaryReactNativeBackend.Logics.Implementations
             var devices = await GetAllDevices();
 
             var deviceResponse = devices.FirstOrDefault(d => d.UserId == userId && d.DeviceToken == deviceToken);
-            
-            if(deviceResponse == null)
-            {
-                throw new CustomException("Thiết bị không tồn tại");
-            }
+
+            return deviceResponse;
+        }
+
+        public async Task<List<DeviceModel>> GetDeviceByUserId(string userId)
+        {
+            var devices = await GetAllDevices();
+
+            var deviceResponse = devices.Where(d => d.UserId == userId ).ToList();
+
             return deviceResponse;
         }
 

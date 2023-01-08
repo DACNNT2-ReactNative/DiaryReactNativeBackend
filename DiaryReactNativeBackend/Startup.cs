@@ -1,7 +1,10 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.S3;
+using CorePush.Apple;
+using CorePush.Google;
 using DiaryReactNativeBackend.ExtensionMethods;
+using DiaryReactNativeBackend.Model;
 using DiaryReactNativeBackend.Services.Abstractions;
 using DiaryReactNativeBackend.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,6 +66,11 @@ public class Startup
         services.AddScoped<IStorageService, StorageService>();
 
         services.AddControllers();
+        services.AddHttpClient<FcmSender>();
+        services.AddHttpClient<ApnSender>();
+
+        var appSettingsSection = Configuration.GetSection("FcmNotification");
+        services.Configure<FcmNotificationSetting>(appSettingsSection);
 
         services.AddAuthorization();
 
