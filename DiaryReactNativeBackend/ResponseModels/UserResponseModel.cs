@@ -9,4 +9,6 @@ public class UserResponseModel
     public string FullName { get; set; }
 
     public Boolean IsProtected { get; set; }
+
+    public string TypeLogin { get; set; }
 }

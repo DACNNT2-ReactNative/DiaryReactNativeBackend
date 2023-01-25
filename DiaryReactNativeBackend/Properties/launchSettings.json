@@ -2,7 +2,7 @@
   "profiles": {
     "DiaryReactNativeBackend": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "https://localhost:3001/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

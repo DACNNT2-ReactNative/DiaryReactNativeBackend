@@ -26,4 +26,6 @@ public class UserRepository : HashKeyOnlyRepositoryBase<UserModel, string>, IUse
     {
         return await GetByHashKey(userId);
     }
+
+   
 }

@@ -13,5 +13,8 @@ public class CreateDeviceRequestModel
     public string DeviceToken { get; set; }
 
     [Required]
+    public string AccessToken { get; set; }
+
+    [Required]
     public string UserAgent { get; set; }
 }

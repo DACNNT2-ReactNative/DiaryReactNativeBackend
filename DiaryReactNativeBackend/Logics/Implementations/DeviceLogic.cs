@@ -83,5 +83,35 @@ namespace DiaryReactNativeBackend.Logics.Implementations
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<DeviceModel> GetDeviceByUserIdAndAccessToken(string userId, string accessToken)
+        {
+            var devices = await GetAllDevices();
+
+            var deviceResponse = devices.FirstOrDefault(d => d.UserId == userId && d.AccessToken == accessToken);
+
+            return deviceResponse;
+        }
+
+        public async Task<string> DeleteAllDeviceForUser(string userId)
+        {
+            var devices = await GetAllDevices();
+
+            var deviceResponse = devices.Where(d => d.UserId == userId).ToList();
+            if (deviceResponse == null) throw new CustomException("Thiết bị không tồn tại");
+
+            try
+            {
+                for(var i = 0; i < deviceResponse.Count; i++)
+                {
+                    await _deviceRepository.Delete(deviceResponse[i]);
+                }
+                return deviceResponse[0].UserId;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

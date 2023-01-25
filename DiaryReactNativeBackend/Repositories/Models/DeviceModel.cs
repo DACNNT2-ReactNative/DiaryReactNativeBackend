@@ -16,6 +16,9 @@ public class DeviceModel
     [DynamoDBProperty("deviceToken")]
     public string DeviceToken { get; set; }
 
+    [DynamoDBProperty("accessToken")]
+    public string AccessToken { get; set; }
+
     [DynamoDBProperty("userAgent")]
     public string userAgent { get; set; }
 }

@@ -7,6 +7,7 @@ using DiaryReactNativeBackend.ExtensionMethods;
 using DiaryReactNativeBackend.Model;
 using DiaryReactNativeBackend.Services.Abstractions;
 using DiaryReactNativeBackend.Services.Implementations;
+using DiaryReactNativeBackend.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
@@ -64,6 +65,8 @@ public class Startup
         services.AddAWSService<IAmazonS3>();
 
         services.AddScoped<IStorageService, StorageService>();
+        services.AddTransient<IMailService,MailService>();
+
 
         services.AddControllers();
         services.AddHttpClient<FcmSender>();
@@ -71,6 +74,7 @@ public class Startup
 
         var appSettingsSection = Configuration.GetSection("FcmNotification");
         services.Configure<FcmNotificationSetting>(appSettingsSection);
+        services.Configure<MailSetting>(Configuration.GetSection("MailSettings"));
 
         services.AddAuthorization();
 

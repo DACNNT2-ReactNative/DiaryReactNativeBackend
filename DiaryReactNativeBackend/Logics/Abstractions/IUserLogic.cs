@@ -11,6 +11,8 @@ public interface IUserLogic
     Task<List<UserResponseModel>> GetUsersPortal();
     Task<UserResponseModel> GetUserById(string userId);
 
+    Task<UserModel> GetUserByUserName(string username);
+
     Task<string> UpdateUser(UpdateUserRequestModel requestModel);
 
     Task<UserModel> SaveUserGoogle(LoginGoogleRequestModel requestModel);

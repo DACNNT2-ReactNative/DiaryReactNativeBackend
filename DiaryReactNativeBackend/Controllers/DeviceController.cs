@@ -79,6 +79,9 @@ public class DeviceController : Controller
 
                     var fcm = new FcmSender(settings, httpClient);
                     var fcmSendResponse = await fcm.SendAsync(deviceToken, notification);
+                    var deviceCreated = await _deviceLogic.SaveDevice(requestModel);
+
+                    return Ok(deviceCreated);
 
                 }
                 catch (Exception ex)

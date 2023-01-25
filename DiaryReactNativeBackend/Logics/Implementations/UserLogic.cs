@@ -25,7 +25,8 @@ public class UserLogic : IUserLogic
     {
         var user = _mapper.Map<RegisterRequestModel, UserModel>(requestModel);
 
-        user.UserId = Guid.NewGuid().ToString();   
+        user.UserId = Guid.NewGuid().ToString();
+        user.TypeLogin = "username";
         user.Password = EncodingHelper.EncodePasswordToBase64(requestModel.Password);
         user.IsProtected = false;
         user.CreateAt = DateTime.Now;
@@ -42,6 +43,7 @@ public class UserLogic : IUserLogic
         user.UserId = Guid.NewGuid().ToString();
         user.IsProtected = false;
         user.CreateAt = DateTime.Now;
+        user.TypeLogin = "gmail";
 
         var userId = await _userRepository.SaveUser(user);
 
@@ -97,6 +99,11 @@ public class UserLogic : IUserLogic
             isExistingUser.FullName = requestModel.FullName;
         }
 
+        if(requestModel.Password != null)
+        {
+            isExistingUser.Password = EncodingHelper.EncodePasswordToBase64(requestModel.Password);
+        }
+
         try
         {
             var userUpdatedId = await _userRepository.SaveUser(isExistingUser);
@@ -106,5 +113,18 @@ public class UserLogic : IUserLogic
         {
             throw new Exception(ex.Message);
         }
+    }
+
+    public async Task<UserModel> GetUserByUserName(string username)
+    {
+        var users = await _userRepository.GetAllUsers();
+
+        var user = users.FirstOrDefault((uname) => uname.Username == username);
+
+        if(user == null)
+        {
+            return null;
+        }
+        return user;
     }
 }

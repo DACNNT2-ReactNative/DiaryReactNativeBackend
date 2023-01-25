@@ -28,6 +28,9 @@ public class UserModel
     [DynamoDBProperty("email")]
     public string Email { get; set; }
 
+    [DynamoDBProperty("typeLogin")]
+    public string TypeLogin { get; set; }
+
     [DynamoDBProperty("createAt")]
     public DateTime CreateAt { get; set; }
 }
