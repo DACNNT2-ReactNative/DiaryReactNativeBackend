@@ -89,7 +89,13 @@ public class UserLogic : IUserLogic
         var isExistingUser = await _userRepository.GetUserById(requestModel.UserId);
         if (isExistingUser == null) throw new CustomException("Tài khoản không tôn tại");
 
-        if(requestModel.PassCode != null)
+        if (requestModel.IsProtected == false)
+        {
+            isExistingUser.PassCode = requestModel.PassCode;
+            isExistingUser.IsProtected = requestModel.IsProtected;
+        }
+
+        if (requestModel.PassCode != null)
         {
             isExistingUser.PassCode = requestModel.PassCode;
             isExistingUser.IsProtected = true;
