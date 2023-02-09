@@ -3,6 +3,7 @@ using Amazon.DynamoDBv2.DataModel;
 using Amazon.S3;
 using CorePush.Apple;
 using CorePush.Google;
+using DiaryReactNativeBackend.CronJob;
 using DiaryReactNativeBackend.ExtensionMethods;
 using DiaryReactNativeBackend.Model;
 using DiaryReactNativeBackend.Services.Abstractions;
@@ -11,6 +12,7 @@ using DiaryReactNativeBackend.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
 using System.Text;
 
 namespace DiaryReactNativeBackend;
@@ -35,6 +37,21 @@ public class Startup
         services.AddScoped<IDynamoDBContext, DynamoDBContext>();
 
         services.AddCors();
+
+        services.AddQuartz(q =>
+        {
+            q.UseMicrosoftDependencyInjectionScopedJobFactory();
+            var jobKey = new JobKey("ScheduleNotification");
+            q.AddJob<ScheduleNotification>(opts => opts.WithIdentity(jobKey));
+
+            q.AddTrigger(opts => opts
+                .ForJob(jobKey)
+                .WithIdentity("ScheduleNotification")
+                .WithCronSchedule("0 40 19 * * ?"));
+
+        });
+
+        services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
         services.Configure<FormOptions>(options =>
         {
